@@ -503,7 +503,10 @@ ax.legend(loc='center left',bbox_to_anchor=[1,0.5],fontsize='xx-small',markersca
 
 plt.title('r2 '+str(round(rsquared,2)))
 
-figsuf=''
+
+
+
+
 if group:
     figsuf=figsuf+'_grouped'
 if aspect=='rain':
