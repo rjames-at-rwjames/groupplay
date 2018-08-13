@@ -1,4 +1,5 @@
 # Plotting wrapper for zonal mean OLR
+# for past and future
 #
 #  Designed to be flexible to dataset
 # and run on multiple models in a loop
@@ -23,20 +24,18 @@ import MetBot.mytools as my
 import MetBot.dimensions_dict as dim_exdict
 
 
-whichd='CMIP5' # UM or CMIP5
+whichd='CMIP5' # CMIP5
 
-if whichd=='UM':
-    import dsets_mplot_um as dset_mp
-elif whichd=='CMIP5':
+if whichd=='CMIP5':
     import dsets_mplot_28 as dset_mp
 
 ### Running options
 test_scr=False
+test_scr2=False
 sub="zoncross"
 #sub="zonmada"
 #sub="bigtrop"
-seas="DJF"
-future=False     # get future thresholds
+seas="N"
 globv='omega'
 levsel=True
 if levsel:
@@ -44,7 +43,6 @@ if levsel:
 else:
     choosel=['1']
 l=0
-group=True
 
 ### Directories
 bkdir=cwd+"/../../CTdata/"
@@ -52,19 +50,13 @@ botdir=bkdir+"metbot_multi_dset/"
 thisdir=bkdir+"groupplay/"
 
 
-figdir=thisdir+"zonalmean_conv/"
+figdir=thisdir+"zonalmean_conv_fut/"
 my.mkdir_p(figdir)
-
-if future:
-    fyear1='2065'
-    fyear2='2099'
 
 ### Multi dset?
 dsets='all'     # "all" or "spec" to choose specific dset(s)
 if dsets=='all':
-    if whichd=='UM':
-        dsetnames=['noaa','cmip5','um']
-    elif whichd=='CMIP5':
+    if whichd=='CMIP5':
         dsetnames=['noaa','cmip5']
     ndset=len(dsetnames)
     dsetstr = '_'.join(dsetnames)
@@ -89,35 +81,16 @@ print 'Total number of models = '+str(nallmod)
 ### Open array for names for cbar
 modnm=["" for x in range(nallmod)] # creates a list of strings for modnames
 
-### colours
-if not group:
-    cols=['b','g','r','c','m','gold','k',\
-        'b','g','r','c','m','gold','k',\
-        'b','g','r','c','m','gold','k',\
-        'b','g','r','c','m','gold','k']
-    markers=["o","o","o","o","o","o","o",\
-        "^","^","^","^","^","^","^",\
-        "*","*","*","*","*","*","*",\
-        "d","d","d","d","d","d","d"]
-    styls=["solid","solid","solid","solid","solid","solid","solid",\
-        "dashed","dashed","dashed","dashed","dashed","dashed","dashed",\
-        "dotted","dotted","dotted","dotted","dotted","dotted","dotted",\
-        "-.","-.","-.","-.","-.","-.","-."]
-elif group:
-    grcls=['fuchsia','b','r','blueviolet','springgreen','gold','darkorange']
-    grcnt=np.zeros(7,dtype=np.int8)
-    grmrs=["o","^","*","d","+","v","h"]
-    gstyls=["-","dotted","dashed","-.","-","dotted","dashed"]
-lws = np.full((28), 2)
-lws[0]=5
-zorders = np.full((28), 2)
-zorders[0]=3
-
 if seas == 'DJF':
     mons=[1,2,12]
     mon1 = 12
     mon2 = 2
     nmon = 3
+elif seas=='N':
+    mons=[11]
+    mon1=11
+    mon2=11
+    nmon=1
 
 # Set up plot
 print "Setting up plot..."
@@ -143,37 +116,20 @@ for d in range(ndset):
     mods='all'  # "all" or "spec" to choose specific model(s)
     if mods=='all':
         nmod=len(dset_mp.dset_deets[dset])
-        mnames_tmp=list(dset_mp.dset_deets[dset])
+        mnames=list(dset_mp.dset_deets[dset])
     nmstr=str(nmod)
 
-    if dset == 'cmip5':
-        if group:
-            mnames = np.zeros(nmod, dtype=object)
 
-            for mo in range(nmod):
-                name = mnames_tmp[mo]
-                moddct = dset_mp.dset_deets[dset][name]
-                thisord = int(moddct['ord']) - 2  # minus 2 because cdr already used
-                mnames[thisord] = name
-
-        else:
-            mnames = mnames_tmp
-    else:
-        mnames = mnames_tmp
+    if dset=='cmip5':
+        if test_scr2:
+            nmod=1
+            mnames=['NorESM1-M']
 
     for m in range(nmod):
         name=mnames[m]
         mcnt=str(m+1)
         print 'Running on ' + name
         print 'This is model '+mcnt+' of '+nmstr+' in list'
-
-        if group:
-            groupdct = dset_mp.dset_deets[dset][name]
-            thisgroup = int(groupdct['group'])
-            grcl = grcls[thisgroup - 1]
-            grmr=grmrs[grcnt[thisgroup-1]]
-            grstl=gstyls[grcnt[thisgroup-1]]
-            grcnt[thisgroup-1]+=1
 
         # Switch variable if NOAA
         if dset == 'noaa' and globv != 'olr':
@@ -183,10 +139,8 @@ for d in range(ndset):
                 #ds4noaa = 'ncep'
                 #mod4noaa = 'ncep2'
             else:
-                # ds4noaa = 'ncep'
-                # mod4noaa = 'ncep2'
-                ds4noaa = 'era'
-                mod4noaa = 'erai'
+                ds4noaa = 'ncep'
+                mod4noaa = 'ncep2'
             dset2 = ds4noaa
             name2 = mod4noaa
         else:
@@ -271,29 +225,68 @@ for d in range(ndset):
             seasmean = np.nanmean(thesemons, 0)
 
             # Get zonal mean
-            zonmean=np.nanmean(seasmean,1)
-
-            if group:
-                colour = grcl
-                mk = grmr
-                ls= grstl
-            else:
-                colour = cols[z]
-                mk = markers[z]
-                ls= styls[z]
+            zonmean_hist=np.nanmean(seasmean,1)
 
             if name=='cdr':
-                colour='k'
-
-            lw=lws[z]
-            zord=zorders[z]
-
-            #if thisgroup==7 or name=='cdr':
-
-            plt.plot(lat,zonmean,c=colour,linestyle=ls, linewidth=lw, zorder=zord,label=name,)
+                plt.plot(lat,zonmean_hist,c='k',linestyle='-', linewidth=5, zorder=5,label=name)
+            elif dset=='cmip5':
+                plt.plot(lat,zonmean_hist,c='grey',linestyle='--', linewidth=2, zorder=1,label=name)
 
             ### Put name into string list
             modnm[z] = dset + "_" + name
+
+            if dset=='cmip5':
+                ys2 = '2065_2099'
+                meanfile2 = bkdir + 'metbot_multi_dset/' + dset2 + '/' + name2 + '/' \
+                            + name2 + '.' + globv + '.mon.mean.rcp85.' + ys2 + '.nc'
+
+                print 'Opening '+meanfile2
+
+                if os.path.exists(meanfile2):
+
+                    if levsel:
+                        ncout = mync.open_multi(meanfile2, globv, name2, \
+                                                dataset=dset2, subs=sub, levsel=levc)
+                    else:
+                        ncout = mync.open_multi(meanfile2, globv, name2, \
+                                                dataset=dset2, subs=sub)
+                    print '...file opened'
+                    ndim = len(ncout)
+                    if ndim == 5:
+                        meandata, time, lat, lon, dtime = ncout
+                    elif ndim == 6:
+                        meandata, time, lat, lon, lev, dtime = ncout
+                        meandata = np.squeeze(meandata)
+                    else:
+                        print 'Check number of dims in ncfile'
+                    dtime[:, 3] = 0
+
+                    # Remove duplicate timesteps
+                    print 'Checking for duplicate timesteps'
+                    tmp = np.ascontiguousarray(dtime).view(
+                        np.dtype((np.void, dtime.dtype.itemsize * dtime.shape[1])))
+                    _, idx = np.unique(tmp, return_index=True)
+                    dtime = dtime[idx]
+                    meandata = meandata[idx, :, :]
+
+                    if globv == 'pr':
+                        meandata = meandata * 86400
+
+                    # Select seasons and get mean
+                    thesemons = np.zeros((nmon, nlat, nlon), dtype=np.float32)
+                    for zz in range(len(mons)):
+                        thesemons[zz, :, :] = meandata[mons[zz] - 1, :, :]
+                    seasmean = np.nanmean(thesemons, 0)
+
+                    # Get zonal mean
+                    zonmean_fut=np.nanmean(seasmean,1)
+
+                    plt.plot(lat, zonmean_fut, c='r', linestyle='--', linewidth=2, zorder=2, label=name)
+
+                else:
+                    print 'No future file for model ' + name
+
+
 
         else:
             print 'No file for model '+name
@@ -321,11 +314,12 @@ ax.legend(loc='center left',bbox_to_anchor=[1,0.5],fontsize='xx-small')
 
 figsuf = whichd
 
-if group:
-    figsuf=figsuf+'_grouped'
-
 if test_scr:
     figsuf=figsuf+'_test_scr'
+
+if test_scr2:
+    figsuf=figsuf+'_test_scr2'
+
 
 ### Save figure
 figname=figdir+'ZonalMean.'+globv+'.'+seas+'.'+sub+'.'+figsuf+'.png'
