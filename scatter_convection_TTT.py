@@ -602,7 +602,7 @@ figsuf=""
 if group:
     figsuf=figsuf+'_grouped'
 if aspect=='rain':
-    figsuf=figsuf+'_'+under_of+'_'+raintype+'_'+sub
+    figsuf=figsuf+'_'+under_of+'_'+raintype+'_'+sub_y
 elif aspect == 'count':
     if relative:
         figsuf = figsuf + 'relative'
