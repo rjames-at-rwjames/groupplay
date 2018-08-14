@@ -40,7 +40,7 @@ future=False     # get future thresholds
 globv='omega'
 levsel=True
 if levsel:
-    choosel=['500'] # can add a list
+    choosel=['700'] # can add a list
 else:
     choosel=['1']
 l=0

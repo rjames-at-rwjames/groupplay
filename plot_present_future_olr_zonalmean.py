@@ -39,7 +39,7 @@ seas="N"
 globv='omega'
 levsel=True
 if levsel:
-    choosel=['500'] # can add a list
+    choosel=['200'] # can add a list
 else:
     choosel=['1']
 l=0
@@ -91,6 +91,11 @@ elif seas=='N':
     mon1=11
     mon2=11
     nmon=1
+elif seas=='OND':
+    mons=[10,11,12]
+    mon1=10
+    mon2=12
+    nmon=3
 
 # Set up plot
 print "Setting up plot..."
@@ -319,6 +324,9 @@ if test_scr:
 
 if test_scr2:
     figsuf=figsuf+'_test_scr2'
+
+if levsel:
+    figsuf=figsuf+'_'+choosel[l]
 
 
 ### Save figure
