@@ -23,7 +23,7 @@ import MetBot.mytools as my
 import MetBot.dimensions_dict as dim_exdict
 
 
-whichd='CMIP5' # UM or CMIP5
+whichd='UM' # UM or CMIP5
 
 if whichd=='UM':
     import dsets_mplot_um as dset_mp
@@ -44,7 +44,7 @@ if levsel:
 else:
     choosel=['1']
 l=0
-group=True
+group=False
 
 ### Directories
 bkdir=cwd+"/../../CTdata/"
@@ -183,10 +183,10 @@ for d in range(ndset):
                 #ds4noaa = 'ncep'
                 #mod4noaa = 'ncep2'
             else:
-                # ds4noaa = 'ncep'
-                # mod4noaa = 'ncep2'
-                ds4noaa = 'era'
-                mod4noaa = 'erai'
+                ds4noaa = 'ncep'
+                mod4noaa = 'ncep2'
+                # ds4noaa = 'era'
+                # mod4noaa = 'erai'
             dset2 = ds4noaa
             name2 = mod4noaa
         else:
@@ -195,7 +195,6 @@ for d in range(ndset):
 
         # Get details
         moddct=dsetdict.dset_deets[dset2][name2]
-        #moddct=dset_mp.dset_deets[dset2][name2]
         vnamedict = globv + 'name'
         mastdct = mast_dict.mast_dset_deets[dset2]
         varstr = mastdct[vnamedict]
@@ -203,7 +202,8 @@ for d in range(ndset):
         latname = dimdict[1]
         lonname = dimdict[2]
         if dset2=='um':
-            ys=moddct['climyr']
+            moddct1 = dset_mp.dset_deets[dset2][name2]
+            ys=moddct1['climyr']
         else:
             if globv != 'omega' and globv != 'q' and globv != 'gpth':
                 ys = moddct['yrfname']
