@@ -1,5 +1,6 @@
 # To plot all CMIP5 models or UM models
 # Scatterplots
+# this time it can work with a difference between 2 regions
 
 import os
 import sys
@@ -39,14 +40,16 @@ elif whichd=='CMIP5':
 seas='DJF'
 
 # x axis - convection
-globv1='omega' # olr or omega
-levsel1=True
+globv1='olr' # olr or omega
+levsel1=False
 if levsel1:
     choosel1=['500'] # can add a list
 else:
     choosel1=['1']
-sub_x='subt'
+sub_x='trop'
 l=0
+
+sub_x2='subt'
 
 # y axis - TTTs
 aspect='count' # count or rain
@@ -76,7 +79,7 @@ botdir=bkdir+"metbot_multi_dset/"
 thisdir=bkdir+"groupplay/"
 refkey='0'
 
-figdir=thisdir+"scatter_convection_TTT/"
+figdir=thisdir+"scatter_relative_convection_TTT/"
 my.mkdir_p(figdir)
 
 ### Dsets
@@ -298,9 +301,49 @@ for t in range(nthresh):
                 seasmean = np.nanmean(thesemons, 0)
 
                 # Get basic regional mean
-                reg_mean=np.nanmean(seasmean)
+                reg_mean1=np.nanmean(seasmean)
 
-                xvals[cnt]=reg_mean
+
+
+                # Now for the second region
+                if levsel1:
+                    ncout = mync.open_multi(meanfile, globv1, name2, \
+                                            dataset=dset2, subs=sub_x2, levsel=levc)
+                else:
+                    ncout = mync.open_multi(meanfile, globv1, name2, \
+                                            dataset=dset2, subs=sub_x2)
+                print '...file opened'
+                ndim = len(ncout)
+                if ndim == 5:
+                    meandata, time, lat, lon, dtime = ncout
+                elif ndim == 6:
+                    meandata, time, lat, lon, lev, dtime = ncout
+                    meandata = np.squeeze(meandata)
+                else:
+                    print 'Check number of dims in ncfile'
+                dtime[:, 3] = 0
+
+                # Remove duplicate timesteps
+                print 'Checking for duplicate timesteps'
+                tmp = np.ascontiguousarray(dtime).view(
+                    np.dtype((np.void, dtime.dtype.itemsize * dtime.shape[1])))
+                _, idx = np.unique(tmp, return_index=True)
+                dtime = dtime[idx]
+                meandata = meandata[idx, :, :]
+
+                nlat = len(lat)
+                nlon = len(lon)
+
+                # Select seasons and get mean
+                thesemons = np.zeros((nmon, nlat, nlon), dtype=np.float32)
+                for zz in range(len(mons)):
+                    thesemons[zz, :, :] = meandata[mons[zz] - 1, :, :]
+                seasmean = np.nanmean(thesemons, 0)
+
+                # Get basic regional mean
+                reg_mean2=np.nanmean(seasmean)
+
+                xvals[cnt]=reg_mean1-reg_mean2
 
 
                 ### TTT info for y axis
@@ -661,7 +704,7 @@ for t in range(nthresh):
         ax.plot(xvals, (grad * xvals + inter), '-', color='k')
 
 
-    xlab=globv1+'_'+sub_x+'_'+seas
+    xlab=globv1+'_'+sub_x+'_minus_'+sub_x2+'_'+seas
     if aspect=='count':
         if relative:
             ylab = 'Percentage of '+seas+' TTTs between ' + str(clon1) + ' and ' + str(clon2)
@@ -689,10 +732,7 @@ for t in range(nthresh):
         if relative:
             figsuf = figsuf + 'relative'
 
-    if levsel1:
-        figsuf = figsuf +'.lev_'+choosel[l]
-
-    scatterfig=figdir+'/scatter.'+whichd+'.'+globv1+'.'+sub_x+'.seas_'+seas+'.TTT'+aspect+'.'\
+    scatterfig=figdir+'/scatter.'+whichd+'.'+globv1+'.anom_'+sub_x+'_'+sub_x2+'.seas_'+seas+'.TTT'+aspect+'.'\
                +str(clon1)+'_to_'+str(clon2)+'.'+figsuf+'.countwith_'+wh_count+'.thresh_'+thnames[t]+'.png'
     print 'saving figure as '+scatterfig
     plt.savefig(scatterfig,dpi=150)

@@ -39,13 +39,13 @@ group=True # works for CMIP5 only
 seas='DJF'
 
 # x axis - convection
-globv1='olr' # olr or omega
-levsel1=False
+globv1='omega' # olr or omega
+levsel1=True
 if levsel1:
-    choosel1=['700'] # can add a list
+    choosel1=['500'] # can add a list
 else:
     choosel1=['1']
-sub_x='scongo'
+sub_x='subt'
 l=0
 
 # y axis - threshold
