@@ -42,10 +42,10 @@ seas='DJF'
 globv1='omega' # olr or omega
 levsel1=True
 if levsel1:
-    choosel1=['500'] # can add a list
+    choosel1=['200'] # can add a list
 else:
     choosel1=['1']
-sub_x='subt'
+sub_x='trop2'
 l=0
 
 # y axis - TTTs
@@ -157,6 +157,9 @@ elif seas == 'JF':
     mon1 = 1
     mon2 = 2
     nmon = 2
+elif seas=='all':
+    mons=[1,2,3,4,5,6,7,8,9,10,11,12]
+    nmon=12
 
 
 ### Loop threshs
@@ -690,7 +693,7 @@ for t in range(nthresh):
             figsuf = figsuf + 'relative'
 
     if levsel1:
-        figsuf = figsuf +'.lev_'+choosel[l]
+        figsuf = figsuf +'.lev_'+choosel1[l]
 
     scatterfig=figdir+'/scatter.'+whichd+'.'+globv1+'.'+sub_x+'.seas_'+seas+'.TTT'+aspect+'.'\
                +str(clon1)+'_to_'+str(clon2)+'.'+figsuf+'.countwith_'+wh_count+'.thresh_'+thnames[t]+'.png'

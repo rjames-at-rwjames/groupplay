@@ -25,7 +25,7 @@ import MetBot.SynopticAnatomy as sy
 import scipy
 
 # Which dataset?
-whichd='CMIP5' #  if CMIP5 just do CMIP5, if UM do all
+whichd='UM' #  if CMIP5 just do CMIP5, if UM do all
 
 if whichd=='UM':
     import dsets_mplot_um as dset_um
@@ -40,16 +40,16 @@ elif whichd=='CMIP5':
 seas='DJF'
 
 # x axis - convection
-globv1='olr' # olr or omega
-levsel1=False
+globv1='omega' # olr or omega
+levsel1=True
 if levsel1:
-    choosel1=['500'] # can add a list
+    choosel1=['200'] # can add a list
 else:
     choosel1=['1']
-sub_x='trop'
+sub_x='trop2'
 l=0
 
-sub_x2='subt'
+sub_x2='subt2'
 
 # y axis - TTTs
 aspect='count' # count or rain
@@ -224,8 +224,10 @@ for t in range(nthresh):
                     ds4noaa = 'trmm'
                     mod4noaa = 'trmm_3b42v7'
                 else:
-                    ds4noaa = 'ncep'
-                    mod4noaa = 'ncep2'
+                    ds4noaa='era'
+                    mod4noaa='erai'
+                    # ds4noaa = 'ncep'
+                    # mod4noaa = 'ncep2'
                 dset2 = ds4noaa
                 name2 = mod4noaa
             else:

@@ -32,10 +32,10 @@ if whichd=='CMIP5':
 ### Running options
 test_scr=False
 test_scr2=False
-sub="zoncross"
+sub="zonall"
 #sub="zonmada"
 #sub="bigtrop"
-seas="N"
+seas="all"
 globv='omega'
 levsel=True
 if levsel:
@@ -96,6 +96,9 @@ elif seas=='OND':
     mon1=10
     mon2=12
     nmon=3
+elif seas=='all':
+    mons=[1,2,3,4,5,6,7,8,9,10,11,12]
+    nmon=12
 
 # Set up plot
 print "Setting up plot..."

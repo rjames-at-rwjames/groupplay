@@ -32,15 +32,15 @@ elif whichd=='CMIP5':
 
 ### Running options
 test_scr=False
-sub="zoncross"
+sub="zonall"
 #sub="zonmada"
 #sub="bigtrop"
-seas="DJF"
+seas="all"
 future=False     # get future thresholds
 globv='omega'
 levsel=True
 if levsel:
-    choosel=['700'] # can add a list
+    choosel=['200'] # can add a list
 else:
     choosel=['1']
 l=0
@@ -118,6 +118,9 @@ if seas == 'DJF':
     mon1 = 12
     mon2 = 2
     nmon = 3
+elif seas=='all':
+    mons=[1,2,3,4,5,6,7,8,9,10,11,12]
+    nmon=12
 
 # Set up plot
 print "Setting up plot..."
