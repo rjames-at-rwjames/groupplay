@@ -24,7 +24,7 @@ import MetBot.SynopticAnatomy as sy
 import scipy
 
 # Which dataset?
-whichd='CMIP5' #  if CMIP5 just do CMIP5, if UM do all
+whichd='UM' #  if CMIP5 just do CMIP5, if UM do all
 
 if whichd=='UM':
     import dsets_mplot_um as dset_um
@@ -42,10 +42,10 @@ seas='DJF'
 globv1='omega' # olr or omega
 levsel1=True
 if levsel1:
-    choosel1=['200'] # can add a list
+    choosel1=['500'] # can add a list
 else:
     choosel1=['1']
-sub_x='trop2'
+sub_x='subt'
 l=0
 
 # y axis - TTTs

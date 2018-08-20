@@ -37,8 +37,8 @@ sub="meridcross"
 #sub="bigtrop"
 seas="DJF"
 future=False     # get future thresholds
-globv='omega'
-levsel=True
+globv='olr'
+levsel=False
 if levsel:
     choosel=['500'] # can add a list
 else:
@@ -307,6 +307,9 @@ for d in range(ndset):
 #plt.ylim(180,300)
 plt.xlabel('latitude', fontsize=14.0, weight='demibold', color='k')
 plt.ylabel('meridional mean '+globv+' '+seas, fontsize=14.0, weight='demibold', color='k')
+
+if globv=='olr':
+    plt.ylim(180,280)
 
 box=ax.get_position()
 ax.set_position([box.x0, box.y0, box.width*0.8, box.height])

@@ -46,10 +46,10 @@ if levsel1:
     choosel1=['200'] # can add a list
 else:
     choosel1=['1']
-sub_x='trop2'
+sub_x='trop3'
 l=0
 
-sub_x2='subt2'
+sub_x2='subt3'
 
 # y axis - TTTs
 aspect='count' # count or rain
@@ -68,7 +68,7 @@ elif aspect=='count':
     per='year' # TTTs per year
     wh_count = 'blob'  # blob or event
 clon1=7.5
-clon2=99.0
+clon2=45.0
 
 # thresholds?
 threshtest=False # currently not working for UM - need to check the thresh test intervals for each mod

@@ -32,10 +32,10 @@ elif whichd=='CMIP5':
 
 ### Running options
 test_scr=False
-sub="zonall"
+sub="zoncross"
 #sub="zonmada"
 #sub="bigtrop"
-seas="all"
+seas="DJF"
 future=False     # get future thresholds
 globv='omega'
 levsel=True
@@ -314,6 +314,8 @@ if globv=='olr':
 elif globv=='omega':
     if choosel[l]=='500':
         plt.ylim(-0.1,0.1)
+    elif choosel[l]=='200':
+        plt.ylim(-0.08,0.04)
     plt.plot(lat,np.zeros(nlat),c='grey',linewidth=1,zorder=1)
 plt.xlabel('latitude', fontsize=14.0, weight='demibold', color='k')
 plt.ylabel('zonal mean '+globv+' '+seas, fontsize=14.0, weight='demibold', color='k')
