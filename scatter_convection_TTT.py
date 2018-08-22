@@ -24,7 +24,7 @@ import MetBot.SynopticAnatomy as sy
 import scipy
 
 # Which dataset?
-whichd='UM' #  if CMIP5 just do CMIP5, if UM do all
+whichd='CMIP5' #  if CMIP5 just do CMIP5, if UM do all
 
 if whichd=='UM':
     import dsets_mplot_um as dset_um
@@ -36,16 +36,16 @@ elif whichd=='CMIP5':
 ### What are we plotting?
 
 # season
-seas='DJF'
+seas='NDJFM'
 
 # x axis - convection
-globv1='omega' # olr or omega
-levsel1=True
+globv1='olr' # olr or omega
+levsel1=False
 if levsel1:
     choosel1=['500'] # can add a list
 else:
     choosel1=['1']
-sub_x='subt'
+sub_x='scongo'
 l=0
 
 # y axis - TTTs
@@ -61,11 +61,11 @@ if aspect=='rain':
         #           - will be highest for models with most intense ttt rain regardness of nTTT
         # perc75 - the 75th percentile of mean rain per CB
 elif aspect=='count':
-    relative = False
+    relative = True
     per='year' # TTTs per year
     wh_count = 'blob'  # blob or event
-clon1=7.5
-clon2=99.0
+clon1=20.0
+clon2=60.0
 
 # thresholds?
 threshtest=False # currently not working for UM - need to check the thresh test intervals for each mod
@@ -367,7 +367,7 @@ for t in range(nthresh):
                             dt = dts[len(dts) / 2]
                         else:
                             dt = dts[0]
-                        if seas=='DJF':
+                        if seas=='DJF' or seas=='NDJFM':
                             if (int(dt[1]) >= mon1) or (int(dt[1]) <= mon2):
                                 thesekeys.append(k)
                                 edts.append(dt)
@@ -407,7 +407,7 @@ for t in range(nthresh):
                         if seas == 'all':
                             blob_edts.append(date)
 
-                        elif seas == 'DJF':
+                        elif seas == 'DJF' or seas=='NDJFM':
                             # Check on the month
                             if mon >= mon1 or mon <= mon2:
                                 blob_edts.append(date)
@@ -423,7 +423,7 @@ for t in range(nthresh):
                             if seas == 'all':
                                 blob_edts_regsel.append(date)
 
-                            elif seas == 'DJF':
+                            elif seas == 'DJF' or seas == 'NDJFM':
 
                                 # Check on the month
                                 if mon >= mon1 or mon <= mon2:
@@ -511,7 +511,7 @@ for t in range(nthresh):
 
                     # Get correct months
                     print 'Selecting the right months'
-                    if seas=='DJF':
+                    if seas=='DJF' or seas=='NDJFM':
                         raindat2 = np.where((rdtime[:, 1] >= mon1) | (rdtime[:, 1] <= mon2))
                     elif seas=='JF':
                         raindat2 = np.where((rdtime[:, 1] >= mon1) & (rdtime[:, 1] <= mon2))
