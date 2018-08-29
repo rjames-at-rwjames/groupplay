@@ -305,7 +305,7 @@ for d in range(ndset):
 
 ### Plot legend and axis
 #plt.ylim(180,300)
-plt.xlabel('latitude', fontsize=14.0, weight='demibold', color='k')
+plt.xlabel('longitude', fontsize=14.0, weight='demibold', color='k')
 plt.ylabel('meridional mean '+globv+' '+seas, fontsize=14.0, weight='demibold', color='k')
 
 if globv=='olr':

@@ -32,14 +32,14 @@ if whichd=='CMIP5':
 ### Running options
 test_scr=False
 test_scr2=False
-sub="zonall"
+sub="zonnew"
 #sub="zonmada"
 #sub="bigtrop"
 seas="all"
 globv='omega'
 levsel=True
 if levsel:
-    choosel=['200'] # can add a list
+    choosel=['500'] # can add a list
 else:
     choosel=['1']
 l=0

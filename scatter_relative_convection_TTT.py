@@ -43,13 +43,13 @@ seas='DJF'
 globv1='omega' # olr or omega
 levsel1=True
 if levsel1:
-    choosel1=['200'] # can add a list
+    choosel1=['500'] # can add a list
 else:
     choosel1=['1']
-sub_x='trop3'
+sub_x='trop2'
 l=0
 
-sub_x2='subt3'
+sub_x2='subt2'
 
 # y axis - TTTs
 aspect='count' # count or rain
@@ -68,7 +68,7 @@ elif aspect=='count':
     per='year' # TTTs per year
     wh_count = 'blob'  # blob or event
 clon1=7.5
-clon2=45.0
+clon2=99.0
 
 # thresholds?
 threshtest=False # currently not working for UM - need to check the thresh test intervals for each mod
@@ -733,6 +733,9 @@ for t in range(nthresh):
     elif aspect == 'count':
         if relative:
             figsuf = figsuf + 'relative'
+
+    if levsel1:
+        figsuf = figsuf + '_' + choosel1[l]
 
     scatterfig=figdir+'/scatter.'+whichd+'.'+globv1+'.anom_'+sub_x+'_'+sub_x2+'.seas_'+seas+'.TTT'+aspect+'.'\
                +str(clon1)+'_to_'+str(clon2)+'.'+figsuf+'.countwith_'+wh_count+'.thresh_'+thnames[t]+'.png'
